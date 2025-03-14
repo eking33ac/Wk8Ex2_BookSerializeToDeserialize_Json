@@ -18,7 +18,7 @@ namespace Wk8Ex2_BookSerializeToDeserialize_Json
             // Serialize the book info to a string. StreamWrite the string to a text file.
             // in main, call the module and serialze the book
             // create a deserialize function: Input file name string
-            // go through the file line by line, splitting at delimiters
+            // convert file content into a string, deserialize it using a parameterless Book constuctor
             // in main, call the deserialize module and deserialize the book back into an object
             // output the object details after deserialization
 
@@ -29,22 +29,14 @@ namespace Wk8Ex2_BookSerializeToDeserialize_Json
             // make the instance of book
             Book book1 = new Book("To Kill a Mockingbird", "Harper Lee", 1900);
 
-            // set the indentation option to true
-            // var optIndent = new JsonSerializerOptions() { WriteIndented = true };
-
-            // set the include fields option to true to be used in deserialization
-            /* var optIncludeFields  = new JsonSerializerOptions() { IncludeFields = true };*/
-
+            // serialize the book and put it into a file
             SerializeToJson(fileName, book1);
 
+            // deserialize the book and put it in a new Book object called deserializedBook
             Book deserializedBook = DeserializeFromJson(fileName);
 
+            // output the details of the deserialized book
             Console.WriteLine("Deserialized Book: {0}, {1}, {2}", deserializedBook.Title, deserializedBook.Author, deserializedBook.Year);
-
-
-            /* // serialize object to fromatted Json string
-             string serializedBook1 = JsonSerializer.Serialize(book1, optIncludeFields);
-             Console.WriteLine($"Serialized book: {serializedBook1}");*/
 
             // pause at the end of the program for user to read
             Console.Read();
@@ -74,11 +66,8 @@ namespace Wk8Ex2_BookSerializeToDeserialize_Json
         // serialize to Json method
         public static void SerializeToJson(string fileName, Book book)
         {
-            // set the include fields option to true to be used in deserialization
-            // is it needed here?
-            var optIncludeFields = new JsonSerializerOptions() { IncludeFields = true };
-            // serialize the book, including fields
-            string serializedObj = JsonSerializer.Serialize(book, optIncludeFields);
+            // serialize the book
+            string serializedObj = JsonSerializer.Serialize(book);
 
             // test write the book to the screen to see how it outputs
             Console.WriteLine($"Serialized book string: {serializedObj}");
@@ -108,61 +97,14 @@ namespace Wk8Ex2_BookSerializeToDeserialize_Json
         {
             // read all text in the file and store it in a string
             string jsonFile = File.ReadAllText(fileName);
+            // does this open a reader I would need to close? I don't have a named stream reader to reader.close, so I think it's fine. ???
 
             // take the string of information and put it in a book object. This uses the parapmaterless constructor.
             Book deserializedBook = JsonSerializer.Deserialize<Book>(jsonFile);
-                      
+
 
             // return the new object
             return deserializedBook;
-            /* // set the include fields option to true to be used in deserialization
-             // is it needed here?
-             var optIncludeFields = new JsonSerializerOptions() { IncludeFields = true };
-
-             // new streamreader to read file and check info
-             StreamReader reader = new StreamReader(fileName);
-
-             string readFile = reader.ReadToEnd();
-
-             Book book = JsonSerializer.Deserialize<Book>(readFile, optIncludeFields);
-
-
-             Console.WriteLine($"Bookstuff deserialized {book.Title}, {book.Author}, {book.Year}");
-
-           *//*  // string line by line
-             string line = string.Empty;
-
-             while ((line = reader.ReadLine()) != null)
-             {
-
-                 string[] words = line.Split(',');
-                 foreach (string word in words)
-                 {
-                     Console.WriteLine($"A word: {word}");
-
-                 }
-             }*/
-
-            /* // new streamreader to read file and check info
-             StreamReader reader = new StreamReader(fileName);
-
-             // put all file info in a string
-             string readFile = reader.ReadToEnd();
-
-             // deserialize the file info into a book object
-             Book deserializedObj = JsonSerializer.Deserialize<Book>(readFile);
- */
-            /*
-
-
-
-
-            // check file info with streamreader
-            Console.WriteLine("File read from DEserialization module: " + reader.ReadToEnd());
-
-            // close the reader so other processes can use the file
-            reader.Close();*/
-        }
-        
+        }        
     }
 }
